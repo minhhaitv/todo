@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To do list (Todo & Gantt)</title>
+  <title>Việc cần làm)</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -50,7 +50,7 @@
       </div>
 
       <!-- Google Web App API URL input & sync action -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2"><div class="config-bar" style="display: none;">
         <div class="relative flex-1 sm:w-80">
           <input type="password" id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbz-koJ3Kp7RYbQ3ECVedqhtmj1Dqr92sqh1e10MKSRBRpRNpBrTCTEMHQR9aubLg38B/exec"
             class="w-full text-xs pl-8 pr-8 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition" />
@@ -62,7 +62,7 @@
         <button onclick="saveApiUrlAndSync()" class="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
           <i class="ph-bold ph-arrows-clockwise text-sm"></i>
           <span>Tải lại</span>
-        </button>
+        </button></div>
         <button onclick="openModal()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition">
           <i class="ph-bold ph-plus text-sm"></i>
           <span>Thêm việc</span>
@@ -262,15 +262,23 @@
       'Thấp': 4
     };
 
+    // Dán URL Web App của bạn vào giữa 2 dấu ngoặc kép bên dưới:
+    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby88kVxk_i9TyqxKeFDxivFkgTia7_chs49om0CixnTX8o2EVevHDtwMLZtzGfPwRe0/exec";
+
+    // Khởi tạo biến scriptUrl ưu tiên lấy từ DEFAULT_SCRIPT_URL
+    let scriptUrl = DEFAULT_SCRIPT_URL || localStorage.getItem("gas_todo_url") || "";
+
     // Initialize API URL from localStorage
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedUrl = localStorage.getItem('google_script_api_url') || '';
-      document.getElementById('apiUrlInput').value = savedUrl;
-      if (savedUrl) {
-        fetchTasks();
-      } else {
-        // Load initial mock demo data if no URL yet
-        loadSampleData();
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlInput = document.getElementById("scriptUrlInput");
+      
+      // Nếu có link mặc định hoặc link lưu trong máy
+      if (scriptUrl) {
+        if (urlInput) {
+          urlInput.value = scriptUrl;
+        }
+        // Tự động tải danh sách việc về luôn
+        loadTasks();
       }
     });
 
